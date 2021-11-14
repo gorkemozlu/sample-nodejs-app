@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: tbs
+  name: tbs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tbs
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: tbs
+    spec:
+      containers:
+      - image: waterda/tbs:5
+        name: tbs
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: tbs
+  name: tbs
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: tbs
+status:
+  loadBalancer: {}
