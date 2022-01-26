@@ -1,41 +1,81 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
-  labels:
-    app: tbs
-  name: tbs
+  name: test-nodejs-app-deployment
+  namespace: test-app
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      app: tbs
-  strategy: {}
+      app: test-nodejs-app
+  replicas: 1
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        app: tbs
+        app: test-nodejs-app
     spec:
       containers:
-      - image: waterda/tbs:5
-        name: tbs
-        resources: {}
-status: {}
+      - name: test-app
+        image: harbor.dorn.gorke.ml/nodejs/sample-app:v0.2.4
+        env:
+        - name: var1
+          value: "Demo-var1"
+        - name: MY_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: MY_POD_SERVICE_ACCOUNT
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.serviceAccountName
+        ports:
+        - containerPort: 3000
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: null
+  name: test-nodejs-app
+  namespace: test-app
   labels:
-    app: tbs
-  name: tbs
+    app: test-nodejs-app
 spec:
   ports:
-  - port: 3000
+  - port: 80
     protocol: TCP
     targetPort: 3000
   selector:
-    app: tbs
-status:
-  loadBalancer: {}
+    app: test-nodejs-app
+  type: LoadBalancer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-nodejs-app
+  namespace: test-app
+  labels:
+    app: test-nodejs-app
+  annotations:
+    kubernetes.io/ingress.class: contour
+spec:
+  rules:
+  - host: test-nodejs-app.tanzu
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+           name: test-nodejs-app
+           port:
+             number: 80
