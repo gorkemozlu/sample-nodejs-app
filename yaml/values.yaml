@@ -1,0 +1,15 @@
+#@data/values
+---
+namespace: test-app
+hello:
+  name: Gorkem
+service:
+  type: ClusterIP # or LoadBalancer
+secret:
+  name: gorkem-secret
+  username: dXNlcm5hbWUtZnJvbS1zZWNyZXQK
+  password: cGFzc3dvcmQtZnJvbS1zZWNyZXQK
+service_account:
+  name: test-app-sa
+ingress:
+  url: test-nodejs-app

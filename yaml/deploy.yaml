@@ -1,8 +1,10 @@
+#@ load("@ytt:data", "data")
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: test-nodejs-app-deployment
-  namespace: test-app
+  namespace: #@ data.values.namespace
 spec:
   selector:
     matchLabels:
@@ -13,12 +15,13 @@ spec:
       labels:
         app: test-nodejs-app
     spec:
+      serviceAccountName: #@ data.values.service_account.name
       containers:
       - name: test-app
-        image: harbor.dorn.gorke.ml/nodejs/sample-app:v0.2.4
+        image: harbor.dorn.gorke.ml/nodejs/sample-app:v0.2.5
         env:
         - name: var1
-          value: "Demo-var1"
+          value: #@ data.values.hello.name
         - name: MY_NODE_NAME
           valueFrom:
             fieldRef:
@@ -39,6 +42,16 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.serviceAccountName
+        - name: SECRET_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: #@ data.values.secret.name
+              key: username
+        - name: SECRET_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: #@ data.values.secret.name
+              key: password
         ports:
         - containerPort: 3000
 ---
@@ -46,7 +59,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: test-nodejs-app
-  namespace: test-app
+  namespace: #@ data.values.namespace
   labels:
     app: test-nodejs-app
 spec:
@@ -62,14 +75,14 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: test-nodejs-app
-  namespace: test-app
+  namespace: #@ data.values.namespace
   labels:
     app: test-nodejs-app
   annotations:
     kubernetes.io/ingress.class: contour
 spec:
   rules:
-  - host: test-nodejs-app.tanzu
+  - host: #@ data.values.ingress.url+".tanzu.vmw.local"
     http:
       paths:
       - pathType: Prefix

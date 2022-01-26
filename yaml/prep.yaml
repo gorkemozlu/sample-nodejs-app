@@ -1,0 +1,19 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: v1
+data:
+  username: #@ data.values.secret.username
+  password: #@ data.values.secret.password
+kind: Secret
+metadata:
+  name: #@ data.values.secret.name
+  namespace: #@ data.values.namespace
+type: Opaque
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: #@ data.values.service_account.name
+  namespace: #@ data.values.namespace
+secrets:
+- name: #@ data.values.secret.name
