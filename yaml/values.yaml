@@ -13,3 +13,5 @@ service_account:
   name: test-app-sa
 ingress:
   url: test-nodejs-app
+storageclass:
+  name: tanzu

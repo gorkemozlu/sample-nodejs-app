@@ -1,5 +1,20 @@
 #@ load("@ytt:data", "data")
 ---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+   labels:
+      app: test-nodejs-app
+   name: nodejs-data
+   annotations:
+     volume.beta.kubernetes.io/storage-class: #@ data.values.storageclass.name
+spec:
+   accessModes:
+     - ReadWriteOnce
+   resources:
+     requests:
+       storage: 100Mi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -52,8 +67,15 @@ spec:
             secretKeyRef:
               name: #@ data.values.secret.name
               key: password
+        volumeMounts:
+        - mountPath: /appdir
+          name: nodejs-data
         ports:
         - containerPort: 3000
+      volumes:
+      - name: nodejs-data
+        persistentVolumeClaim:
+          claimName: nodejs-data
 ---
 apiVersion: v1
 kind: Service
