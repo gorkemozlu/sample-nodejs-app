@@ -4,7 +4,8 @@
   "description": "express",
   "main": "app.js",
   "scripts": {
-    "prod": "node app.js"
+    "prod": "node app.js",
+    "dev":"nodemon app.js -e js,pug,html,css"
   },
   "author": "",
   "license": "ISC",
