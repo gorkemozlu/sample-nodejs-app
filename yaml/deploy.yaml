@@ -33,7 +33,7 @@ spec:
       serviceAccountName: #@ data.values.service_account.name
       containers:
       - name: test-app
-        image: harbor.dorn.gorke.ml/nodejs/sample-app:v0.2.5
+        image: harbor.dorn.gorke.ml/nodejs/sample-app:v0.2.6
         env:
         - name: var1
           value: #@ data.values.hello.name
