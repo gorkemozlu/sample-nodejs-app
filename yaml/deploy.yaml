@@ -6,6 +6,7 @@ metadata:
    labels:
       app: test-nodejs-app
    name: nodejs-data
+   namespace: #@ data.values.namespace
    annotations:
      volume.beta.kubernetes.io/storage-class: #@ data.values.storageclass.name
 spec:
@@ -27,6 +28,8 @@ spec:
   replicas: 1
   template:
     metadata:
+      annotations:
+        backup.velero.io/backup-volumes: nodejs-data
       labels:
         app: test-nodejs-app
     spec:
@@ -104,7 +107,7 @@ metadata:
     kubernetes.io/ingress.class: contour
 spec:
   rules:
-  - host: #@ data.values.ingress.url+".tanzu.vmw.local"
+  - host: #@ data.values.ingress.url
     http:
       paths:
       - pathType: Prefix
