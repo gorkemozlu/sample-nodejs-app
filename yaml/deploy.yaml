@@ -94,7 +94,7 @@ spec:
     targetPort: 3000
   selector:
     app: test-nodejs-app
-  type: LoadBalancer
+  type: #@ data.values.service.type
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
