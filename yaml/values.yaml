@@ -12,6 +12,6 @@ secret:
 service_account:
   name: test-app-sa
 ingress:
-  url: test-nodejs-app.highgarden.gorke.ml
+  url: test-nodejs-app.highgarden.gorke.ml # could be blank
 storageclass:
   name: default

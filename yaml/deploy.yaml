@@ -96,6 +96,7 @@ spec:
     app: test-nodejs-app
   type: #@ data.values.service.type
 ---
+#@ if data.values.ingress.url:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -117,3 +118,4 @@ spec:
            name: test-nodejs-app
            port:
              number: 80
+#@ end
