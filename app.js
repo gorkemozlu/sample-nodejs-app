@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 
   var uptime = process.uptime();
   //console.log(format(uptime));
-  //console.log(hostname)
+  console.log('request for "/" url: '+ process.env.var1+" "+process.env.MY_NODE_NAME+" "+process.env.MY_POD_NAME+" "+process.env.MY_POD_NAMESPACE+" "+process.env.MY_POD_SERVICE_ACCOUNT+" "+process.env.SECRET_USERNAME+" "+process.env.SECRET_PASSWORD+" "+uptime)
   res.send(`<p>Hello  ${process.env.var1} !</p><p>Node Name: ${process.env.MY_NODE_NAME}</p><p>Pod Name: ${process.env.MY_POD_NAME}</p><p>Namespace: ${process.env.MY_POD_NAMESPACE}</p><p>Service Account: ${process.env.MY_POD_SERVICE_ACCOUNT}</p><p>Username from Secret: ${process.env.SECRET_USERNAME}</p><p>Password from Secret: ${process.env.SECRET_PASSWORD}</p><p>Uptime: ${uptime}</p>`)
   
 })
@@ -32,13 +32,14 @@ app.get('/cat', (req, res) => {
       console.error(err)
       fs.writeFile(`${filePath}`, '', function (err) {
         if (err) throw err;
-        console.log('Empty file is created successfully.');
+        console.log('request for "/cat" url. Output is: '+"Empty file created. refresh page.")
       });
       res.send("Empty file created. refresh page.")
       return
     }
-    //console.log(data)
-    res.send(data)
+    var array = fs.readFileSync(`${filePath}`).toString().split("\n");
+    console.log('request for "/cat" url. Output is: '+array)
+    res.send(array)
   })
 
   
@@ -47,24 +48,25 @@ app.get('/cat', (req, res) => {
 app.get('/add', (req, res) => {
   var filePath='/appdir/file.txt'
   let r = (Math.random() + 1).toString(36).substring(7);
-  console.log("random", r);
   var strToAdd=req.query.id
   if(strToAdd){
     console.log(req.query.id)
-    fs.appendFile(`${filePath}`, ` new ${strToAdd}`, function (err) {
+    fs.appendFile(`${filePath}`, `${strToAdd}\n`, function (err) {
       if (err) {
         // append failed
       } else {
         // done
+        console.log('request for "/add" url with ' +JSON.stringify(req.query)+' Output is: '+"ok")
         res.send("ok")
       }
     })
   }else{
-    fs.appendFile(`${filePath}`, ` new ${r}`, function (err) {
+    fs.appendFile(`${filePath}`, `${r}\n`, function (err) {
       if (err) {
         // append failed
       } else {
         // done
+        console.log('request for "/add" url with ' +JSON.stringify(req.query)+' Output is: '+"ok")
         res.send("ok")
       }
     })
@@ -77,6 +79,7 @@ app.get('/add', (req, res) => {
 app.get('/del', (req, res) => {
   var filePath='/appdir/file.txt'
   fs.unlinkSync(filePath);
+  console.log('request for "/del" url. Output is: '+"ok")
   res.send("ok")
   
 })
