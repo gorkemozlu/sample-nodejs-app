@@ -96,6 +96,18 @@ spec:
     app: test-nodejs-app
   type: #@ data.values.service.type
 ---
+#@ if data.values.ingress.tls.key:
+apiVersion: v1
+kind: Secret
+metadata:
+  name: testsecret-tls
+  namespace: #@ data.values.namespace
+data:
+  tls.crt: #@ data.values.ingress.tls.key
+  tls.key: #@ data.values.ingress.tls.crt
+type: kubernetes.io/tls
+#@ end
+---
 #@ if data.values.ingress.url:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -118,4 +130,10 @@ spec:
            name: test-nodejs-app
            port:
              number: 80
+  #@ if data.values.ingress.tls.key:
+  tls:
+  - hosts:
+      - #@ data.values.ingress.url+".tanzu.vmw.local"
+    secretName: testsecret-tls
+  #@ end
 #@ end
