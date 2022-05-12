@@ -14,7 +14,7 @@ service_account:
 ingress:
   url: test-nodejs-app.highgarden.gorke.ml # could be blank
   tls:
-    key: asd # could be blank
-    crt: asd # could be blank
+    key: # blank or base64 value
+    crt: # blank or base64 value
 storageclass:
   name: default
