@@ -1,4 +1,6 @@
 ```
+#ytt --ignore-unknown-comments -f values.yaml -f prep.yaml|kubectl -n tanzuns1  apply -f -
+#ytt --ignore-unknown-comments -f values.yaml -f deploy.yaml|kubectl -n tanzuns1  apply -f -
 kapp deploy -a namespace-prep -f <(ytt --ignore-unknown-comments -f values.yaml -f prep.yaml)
 kapp deploy -a deploy-app -f <(ytt --ignore-unknown-comments -f values.yaml -f deploy.yaml)
 kubectl get pods,secret,sa,ingress,svc,pvc -n test-app
