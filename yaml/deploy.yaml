@@ -11,7 +11,12 @@ metadata:
      volume.beta.kubernetes.io/storage-class: #@ data.values.storageclass.name
 spec:
    accessModes:
+     #@ if data.values.app.type == "rwm":
+     - ReadWriteMany
+     #@ end
+     #@ if data.values.app.type == "rwo":
      - ReadWriteOnce
+     #@ end
    resources:
      requests:
        storage: 100Mi
@@ -25,7 +30,12 @@ spec:
   selector:
     matchLabels:
       app: test-nodejs-app
+  #@ if data.values.app.type == "rwm":
+  replicas: 2
+  #@ end
+  #@ if data.values.app.type == "rwo":
   replicas: 1
+  #@ end
   template:
     metadata:
       annotations:
