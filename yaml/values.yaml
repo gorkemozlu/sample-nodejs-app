@@ -4,7 +4,7 @@ namespace: test-app
 hello:
   name: Gorkem
 app:
-  type: rwm # or rwo 
+  type: rwo # or rwm
 service:
   type: ClusterIP # or LoadBalancer
 secret:
