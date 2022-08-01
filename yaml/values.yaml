@@ -14,7 +14,7 @@ secret:
 service_account:
   name: test-app-sa
 ingress:
-  url: test-nodejs-app.highgarden.gorke.ml # could be blank
+  url: # test-nodejs-app.highgarden.gorke.ml # could be blank
   tls:
     key: # blank or base64 value
     crt: # blank or base64 value
