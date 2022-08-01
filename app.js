@@ -4,6 +4,10 @@ const port = 3000
 var os = require("os");
 const fs = require('fs')
 
+app.get('/image', function (req, res) {
+   res.sendFile(__dirname +"/logo.png");
+});
+
 app.get('/', (req, res) => {
   //res.send('Hello World! ' + process.env.DB_HOST)
   function format(seconds){
@@ -21,8 +25,36 @@ app.get('/', (req, res) => {
   var uptime = process.uptime();
   //console.log(format(uptime));
   console.log('request for "/" url: '+ process.env.var1+" "+process.env.MY_NODE_NAME+" "+process.env.MY_POD_NAME+" "+process.env.MY_POD_NAMESPACE+" "+process.env.MY_POD_SERVICE_ACCOUNT+" "+process.env.SECRET_USERNAME+" "+process.env.SECRET_PASSWORD+" "+uptime)
-  res.send(`<p>Hello  ${process.env.var1} !</p><p>Node Name: ${process.env.MY_NODE_NAME}</p><p>Pod Name: ${process.env.MY_POD_NAME}</p><p>Namespace: ${process.env.MY_POD_NAMESPACE}</p><p>Service Account: ${process.env.MY_POD_SERVICE_ACCOUNT}</p><p>Username from Secret: ${process.env.SECRET_USERNAME}</p><p>Password from Secret: ${process.env.SECRET_PASSWORD}</p><p>Uptime: ${uptime}</p>`)
-  
+  //res.send(`<p>Hello  ${process.env.var1} !</p><p>Node Name: ${process.env.MY_NODE_NAME}</p><p>Pod Name: ${process.env.MY_POD_NAME}</p><p>Namespace: ${process.env.MY_POD_NAMESPACE}</p><p>Service Account: ${process.env.MY_POD_SERVICE_ACCOUNT}</p><p>Username from Secret: ${process.env.SECRET_USERNAME}</p><p>Password from Secret: ${process.env.SECRET_PASSWORD}</p><p>Uptime: ${uptime}</p>`)
+  res.send(`
+  <!DOCTYPE html>
+  <html style="background: #1b2a32;">
+    <head>
+      <base href="/">
+      <style>
+.child {
+  display: inline-block;
+  vertical-align: middle;
+}
+</style>
+    </head>
+    <body style="color: #fff;background-color: #263841;border:3px; border-style:solid; border-color:#314150; padding: 1em;">
+        <div class='child'>
+        <h1 style="color: #5BCEFF;">Hello  ${process.env.var1} from Tanzu!</h1>
+        <h3>Node Name: ${process.env.MY_NODE_NAME}</h3>
+        <h3>Pod Name: ${process.env.MY_POD_NAME}</h3>
+        <h3>Namespace: ${process.env.MY_POD_NAMESPACE}</h3>
+        <h3>Service Account: ${process.env.MY_POD_SERVICE_ACCOUNT}</h3>
+        <h3>Username from Secret: ${process.env.SECRET_USERNAME}</h3>
+        <h3>Password from Secret: ${process.env.SECRET_PASSWORD}</h3>
+        <h3>Uptime: ${uptime}</h3>
+        </div>
+        <div class='child'>
+        <img src="/image">
+        </div>
+    </body>
+  </html>
+`);
 })
 
 app.get('/cat', (req, res) => {
